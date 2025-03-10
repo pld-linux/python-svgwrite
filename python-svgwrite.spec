@@ -11,7 +11,7 @@
 Summary:	Python 2 library to create SVG drawings
 Name:		python-%{pypi_name}
 Version:	1.3.1
-Release:	5
+Release:	6
 License:	MIT
 Group:		Libraries/Python
 Source0:	https://github.com/mozman/svgwrite/archive/v%{version}/%{module}-%{version}.tar.gz
