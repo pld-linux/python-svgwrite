@@ -3,7 +3,7 @@
 %bcond_without	doc	# Sphinx documentation
 %bcond_without	tests	# unit tests
 %bcond_without	python2 # CPython 2.x module
-%bcond_without	python3 # CPython 3.x module
+%bcond_with	python3 # CPython 3.x module (built from python3-svgwrite.spec)
 
 %define		module		svgwrite
 Summary:	Python 2 library to create SVG drawings
@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Biblioteka Pythona 2 do tworzenia rysunków SVG
 Name:		python-%{module}
 # keep 1.3.x here for python2 support
 Version:	1.3.1
-Release:	7
+Release:	8
 License:	MIT
 Group:		Libraries/Python
 Source0:	https://github.com/mozman/svgwrite/archive/v%{version}/%{module}-%{version}.tar.gz
