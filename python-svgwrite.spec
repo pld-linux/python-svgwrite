@@ -18,18 +18,24 @@ Source0:	https://github.com/mozman/svgwrite/archive/v%{version}/%{module}-%{vers
 # Source0-md5:	a3d9311578538ba5acd6bb98d14cae38
 URL:		https://github.com/mozman/svgwrite
 %if %{with python2}
-BuildRequires:	python-modules
-BuildRequires:	python-pyparsing
+BuildRequires:	python-modules >= 1:2.7
 BuildRequires:	python-setuptools
+%if %{with tests}
+BuildRequires:	python-pyparsing >= 2.0.1
+BuildRequires:	python-pytest
+%endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-modules
-BuildRequires:	python3-pyparsing
+BuildRequires:	python3-modules >= 1:3.5
 BuildRequires:	python3-setuptools
-BuildRequires:	python3-setuptools
+%if %{with tests}
+BuildRequires:	python3-pyparsing >= 2.0.1
+BuildRequires:	python3-pytest
+%endif
 %endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
+Requires:	python-modules >= 1:2.7
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -43,8 +49,7 @@ Biblioteka Pythona 2 do tworzenia rysunków SVG.
 Summary:	Python 3 library to create SVG drawings
 Summary(pl.UTF-8):	Biblioteka Pythona 3 do tworzenia rysunków SVG
 Group:		Libraries/Python
-#Requires:	python3-pyparsing
-#Requires:	python3-setuptools
+Requires:	python3-modules >= 1:3.5
 
 %description -n python3-%{module}
 Python 3 library to create SVG drawings.
