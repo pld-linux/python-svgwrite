@@ -1,15 +1,15 @@
 #
 # Conditional build:
-%bcond_without	doc	# don't build doc
-%bcond_without	tests	# do not perform "make test"
+%bcond_without	doc	# Sphinx documentation
+%bcond_without	tests	# unit tests
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
 %define		module		svgwrite
-%define		egg_name	svgwrite
-%define		pypi_name	svgwrite
 Summary:	Python 2 library to create SVG drawings
-Name:		python-%{pypi_name}
+Summary(pl.UTF-8):	Biblioteka Pythona 2 do tworzenia rysunków SVG
+Name:		python-%{module}
+# keep 1.3.x here for python2 support
 Version:	1.3.1
 Release:	7
 License:	MIT
@@ -17,9 +17,6 @@ Group:		Libraries/Python
 Source0:	https://github.com/mozman/svgwrite/archive/v%{version}/%{module}-%{version}.tar.gz
 # Source0-md5:	a3d9311578538ba5acd6bb98d14cae38
 URL:		https://github.com/mozman/svgwrite
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
-BuildArch:	noarch
 %if %{with python2}
 BuildRequires:	python-modules
 BuildRequires:	python-pyparsing
@@ -31,21 +28,32 @@ BuildRequires:	python3-pyparsing
 BuildRequires:	python3-setuptools
 BuildRequires:	python3-setuptools
 %endif
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.714
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Python 2 library to create SVG drawings.
 
-%package -n python3-%{pypi_name}
-Summary:	Python 3 library to create SVG drawings
-Requires:	python3-pyparsing
-Requires:	python3-setuptools
+%description -l pl.UTF-8
+Biblioteka Pythona 2 do tworzenia rysunków SVG.
 
-%description -n python3-%{pypi_name}
+%package -n python3-%{module}
+Summary:	Python 3 library to create SVG drawings
+Summary(pl.UTF-8):	Biblioteka Pythona 3 do tworzenia rysunków SVG
+Group:		Libraries/Python
+#Requires:	python3-pyparsing
+#Requires:	python3-setuptools
+
+%description -n python3-%{module}
 Python 3 library to create SVG drawings.
 
+%description -n python3-%{module} -l pl.UTF-8
+Biblioteka Pythona 3 do tworzenia rysunków SVG.
+
 %prep
-%setup -q -n %{pypi_name}-%{version}
+%setup -q -n %{module}-%{version}
 
 # test is hosed and fails on the order of attr in a tag
 %{__rm} tests/test_pretty_xml.py
@@ -53,18 +61,32 @@ Python 3 library to create SVG drawings.
 %{__rm} tests/test_style.py
 
 %build
-%py3_build
+%if %{with python2}
 %py_build
 
 %if %{with tests}
-%{__python3} -m unittest discover -s tests
 %{__python} -m unittest discover -s tests
+%endif
+%endif
+
+%if %{with python3}
+%py3_build
+
+%if %{with tests}
+%{__python3} -m unittest discover -s tests
+%endif
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%py3_install
+
+%if %{with python2}
 %py_install
+%endif
+
+%if %{with python3}
+%py3_install
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -73,14 +95,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc NEWS.rst README.rst LICENSE.TXT
-%{py_sitescriptdir}/%{module}
-%{py_sitescriptdir}/%{egg_name}-%{version}-py%{py_ver}.egg-info
+%{py_sitescriptdir}/svgwrite
+%{py_sitescriptdir}/svgwrite-%{version}-py%{py_ver}.egg-info
 %endif
 
 %if %{with python3}
-%files -n python3-%{pypi_name}
+%files -n python3-%{module}
 %defattr(644,root,root,755)
 %doc NEWS.rst README.rst LICENSE.TXT
-%{py3_sitescriptdir}/%{module}
-%{py3_sitescriptdir}/%{pypi_name}-%{version}-py%{py3_ver}.egg-info
+%{py3_sitescriptdir}/svgwrite
+%{py3_sitescriptdir}/svgwrite-%{version}-py%{py3_ver}.egg-info
 %endif
